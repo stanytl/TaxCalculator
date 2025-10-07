@@ -39,6 +39,7 @@ public class TaxCalculatorService : ITaxCalculatorService
         for (int i = 0; i < orderedBands.Count; i++)
         {
             var band = orderedBands[i];
+            TaxBandValidator.Validate(band);
             decimal upperLimit = (i < orderedBands.Count - 1) ? orderedBands[i + 1].LowerLimit : grossSalary;
 
             if (grossSalary > band.LowerLimit)
