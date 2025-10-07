@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tax Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 2rem auto; }
+        label, input, button { margin: 0.5rem 0; }
+        .results { margin-top: 2rem; border-top: 1px solid #ccc; padding-top: 1rem; }   
+    </style>
+</head>
+<body>
+    <h2>Salary Entry</h2>
+    <form id="taxForm">
+        <label for="grossSalary">Gross Annual Salary:</label>
+        <input type="number" id="grossSalary" name="grossSalary" step="0.01" required />
+        <button type="submit">Calc</button>
+    </form>
+    <div class="results" id="results"></div>
+
+    <script>
+        document.getElementById('taxForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const grossSalary = document.getElementById('grossSalary').value;
+            const response = await fetch('https://localhost:7245/api/TaxCalculation/calculate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ grossSalary: parseFloat(grossSalary) })
+            });
+            const resultsDiv = document.getElementById('results');
+            if (response.ok) {
+                const result = await response.json();
+                resultsDiv.innerHTML = `
+                    <h2>Results</h2>
+                    <table style="width:100%; border-collapse:collapse;">
+                        <tr><th style="text-align:left;">Description</th><th style="text-align:right;">Amount (£)</th></tr>
+                        <tr><td>Gross Annual Salary</td><td style="text-align:right;">£${result.grossAnnualSalary.toFixed(2)}</td></tr>
+                        <tr><td>Gross Monthly Salary</td><td style="text-align:right;">£${result.grossMonthlySalary.toFixed(2)}</td></tr>
+                        <tr><td>Net Annual Salary</td><td style="text-align:right;">£${result.netAnnualSalary.toFixed(2)}</td></tr>
+                        <tr><td>Net Monthly Salary</td><td style="text-align:right;">£${result.netMonthlySalary.toFixed(2)}</td></tr>
+                        <tr><td>Annual Tax Paid</td><td style="text-align:right;">£${result.annualTaxPaid.toFixed(2)}</td></tr>
+                        <tr><td>Monthly Tax Paid</td><td style="text-align:right;">£${result.monthlyTaxPaid.toFixed(2)}</td></tr>
+                    </table>
+                `;
+            } else {
+                const error = await response.json();
+                resultsDiv.innerHTML = `<p style="color:red;">${error.error || "Calculation failed."}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
