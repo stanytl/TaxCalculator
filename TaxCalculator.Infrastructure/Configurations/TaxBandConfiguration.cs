@@ -22,5 +22,8 @@ public class TaxBandConfiguration : IEntityTypeConfiguration<TaxBand>
 
         builder.Property(tb => tb.TaxYear)
             .IsRequired();
+
+        builder.HasIndex(b => b.LowerLimit).IsUnique();
+        builder.HasIndex(b => b.TaxCode).IsUnique(); // Add this line
     }
 }

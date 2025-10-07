@@ -21,8 +21,7 @@ public class TaxBandRepository : ITaxBandRepository
 
     public async Task<IEnumerable<TaxBand>> GetTaxBandsAsync(CancellationToken cancellationToken)
     {
-        return await _dbContext.TaxBands
-            .OrderBy(tb => tb.LowerLimit)
-            .ToListAsync(cancellationToken);
+        return (await _dbContext.TaxBands.ToListAsync(cancellationToken))
+            .OrderBy(tb => tb.LowerLimit);
     }
 }

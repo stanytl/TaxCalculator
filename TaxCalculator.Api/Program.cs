@@ -6,18 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using TaxCalculator.Domain.Repositories;
 using TaxCalculator.Domain.Services;
 using TaxCalculator.Application.TaxCalculation.Services;
+using Microsoft.Data.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+var connection = new SqliteConnection("DataSource=:memory:");
+connection.Open();
+
 builder.Services.AddDbContext<TaxCalculatorDbContext>(options =>
-    options.UseInMemoryDatabase("TaxCalculatorDb"));
+    options.UseSqlite(connection));
 
 builder.Services.AddScoped<ITaxBandRepository, TaxBandRepository>();
 builder.Services.AddScoped<ITaxCalculatorService, TaxCalculatorService>();
-
 
 var assemblies = AppDomain.CurrentDomain.GetAssemblies()
     .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.Location))
@@ -46,6 +49,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<TaxCalculatorDbContext>();
+    dbContext.Database.EnsureCreated();
     dbContext.SeedTaxBands();
 }
 

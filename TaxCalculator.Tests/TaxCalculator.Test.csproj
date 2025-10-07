@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.11.0" />
@@ -18,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TaxCalculator.Application\TaxCalculator.Application.csproj" />
     <ProjectReference Include="..\TaxCalculator.Domain\TaxCalculator.Domain.csproj" />
+    <ProjectReference Include="..\TaxCalculator.Infrastructure\TaxCalculator.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
